@@ -1,13 +1,10 @@
-import { Fragment } from "react";
-import { Button } from "@mui/material";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/index";
 
 export default function App() {
   return (
-    <Fragment>
-      <div className="bg-red-400 p-5 ">
-        <h1 className="text-white">App Local</h1>
-        <Button variant="contained">Contained</Button>
-      </div>
-    </Fragment>
+    <>
+      <RouterProvider router={router} />
+    </>
   );
 }
