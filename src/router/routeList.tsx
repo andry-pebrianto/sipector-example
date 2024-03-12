@@ -9,38 +9,30 @@ export interface IRoute {
 
 export const privateRouteList: IRoute[] = [
   {
-    path: "/page1",
-    name: "Page1Page",
-    element: lazy(() => import("../pages/page1")),
+    path: "/dashboard",
+    name: "Dashboard Page",
+    element: lazy(() => import("../pages/dashboard")),
+  },
+  {
+    path: "/backoffice",
+    name: "Back Office",
+    element: lazy(() => import("../pages/NotFound")),
     children: [
       {
-        path: "/page1/page2",
-        name: "Page2Page",
-        element: lazy(() => import("../pages/page2")),
-        children: [
-          {
-            path: "/page1/page2/page3",
-            name: "Page3Page",
-            element: lazy(() => import("../pages/page3")),
-            children: [
-              {
-                path: "/page1/page2/page3/page4",
-                name: "Page4Page",
-                element: lazy(() => import("../pages/page4")),
-                children: [
-                  {
-                    path: "/page1/page2/page3/page4/page5",
-                    name: "Page5Page",
-                    element: lazy(() => import("../pages/page5")),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        path: "/backoffice/city",
+        name: "City Page",
+        element: lazy(() => import("../pages/backoffice/city")),
+      },
+      {
+        path: "/backoffice/country",
+        name: "Country Page",
+        element: lazy(() => import("../pages/backoffice/country")),
+      },
+      {
+        path: "/backoffice/global",
+        name: "Global Page",
+        element: lazy(() => import("../pages/backoffice/global")),
       },
     ],
   },
 ];
-
-export const authRouteList: IRoute[] = [];

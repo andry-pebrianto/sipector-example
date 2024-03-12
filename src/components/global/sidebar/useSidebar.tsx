@@ -27,11 +27,7 @@ export const MyProSidebarProvider = ({ children }: { children: ReactNode }) => {
           setSidebarRTL,
         }}
       >
-        <div
-          className={`clean flex ${
-            sidebarRTL ? "flex-row-reverse" : "flex-row"
-          }`}
-        >
+        <div className={`flex ${sidebarRTL ? "flex-row-reverse" : "flex-row"}`}>
           <MyProSidebar />
           {children}
         </div>
@@ -40,4 +36,4 @@ export const MyProSidebarProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useSidebarContext = () => useContext(SidebarContext);
+export const useSidebar = () => useContext(SidebarContext);

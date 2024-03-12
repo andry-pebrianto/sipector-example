@@ -6,80 +6,14 @@ import {
   SubMenu,
   useProSidebar,
 } from "react-pro-sidebar";
-import { useTheme, Box, Typography, IconButton } from "@mui/material";
-import {
-  MdLocalPostOffice,
-  MdPieChart,
-  MdOutlineSwitchLeft,
-  MdOutlineSwitchRight,
-} from "react-icons/md";
+import { Box, Typography, IconButton } from "@mui/material";
+import { MdOutlineSwitchLeft, MdOutlineSwitchRight } from "react-icons/md";
 import { IoClose, IoMenuSharp } from "react-icons/io5";
-import { tokens } from "../../../hooks/useTheme";
-import { useSidebarContext } from "./useSidebarContext";
-
-export interface IMenus {
-  name: string;
-  title: string;
-  type: "link" | "dropdown";
-  route?: string;
-  icon?: JSX.Element;
-  children?: IMenus[];
-}
-
-export const menus: IMenus[] = [
-  {
-    name: "page1",
-    title: "Page 1",
-    type: "link",
-    route: "/page1",
-    icon: <MdPieChart className="text-xl" />,
-  },
-  {
-    name: "page2&3",
-    title: "Page 2 & 3",
-    type: "dropdown",
-    icon: <MdLocalPostOffice className="text-xl" />,
-    children: [
-      {
-        name: "page2",
-        title: "Page 2",
-        type: "link",
-        route: "/page1/page2",
-      },
-      {
-        name: "page3",
-        title: "Page 3",
-        type: "link",
-        route: "/page1/page2/page3",
-      },
-    ],
-  },
-  {
-    name: "page4&5",
-    title: "Page 4 & 5",
-    type: "dropdown",
-    icon: <MdLocalPostOffice className="text-xl" />,
-    children: [
-      {
-        name: "page4",
-        title: "Page 4",
-        type: "link",
-        route: "/page1/page2/page3/page4",
-      },
-      {
-        name: "page5",
-        title: "Page 5",
-        type: "link",
-        route: "/page1/page2/page3/page4/page5",
-      },
-    ],
-  },
-];
+import { useSidebar } from "./useSidebar";
+import { menuList } from "../../../router/menuList";
 
 const MyProSidebar = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const sidebarC = useSidebarContext();
+  const sidebarContext = useSidebar();
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
   const location = useLocation();
 
@@ -95,85 +29,110 @@ const MyProSidebar = () => {
         "& .sidebar": {
           border: "none",
         },
-        "& .menu-icon": {
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-item": {
-          // padding: "5px 35px 5px 20px !important",
-          backgroundColor: "transparent !important",
-        },
         "& .menu-anchor": {
-          color: "inherit !important",
+          color: "#fff",
           backgroundColor: "transparent !important",
         },
         "& .sub-menu-content": {
-          color: "inherit !important",
-          backgroundColor: "transparent !important",
+          color: "#fff",
+          backgroundColor: "#045ea8 !important",
+          border: collapsed ? "4px solid #0f74c6" : "",
         },
-        "& .menu-anchor:hover": {
-          color: `${colors.blueAccent[500]} !important`,
-          backgroundColor: "transparent !important",
-        },
-        "& .menu-item.active": {
-          color: `${colors.greenAccent[500]} !important`,
-          backgroundColor: "transparent !important",
+        "& .expand-icon": {
+          marginTop: !collapsed ? "-8px" : "-4px",
         },
       }}
     >
       <Sidebar
         breakPoint="md"
-        rtl={sidebarC?.sidebarRTL}
-        backgroundColor={colors.primary[400]}
+        rtl={sidebarContext?.sidebarRTL}
+        backgroundColor={"#045ea8"}
       >
         <Menu>
           <MenuItem
             icon={
               collapsed ? (
-                <IoMenuSharp onClick={() => collapseSidebar()} />
-              ) : sidebarC?.sidebarRTL ? (
-                <MdOutlineSwitchLeft
-                  onClick={() => sidebarC?.setSidebarRTL(!sidebarC?.sidebarRTL)}
-                />
+                <IconButton onClick={() => collapseSidebar()}>
+                  <IoMenuSharp className="text-2xl text-[#fff]" />
+                </IconButton>
+              ) : sidebarContext?.sidebarRTL ? (
+                <IconButton
+                  onClick={() =>
+                    sidebarContext?.setSidebarRTL(!sidebarContext?.sidebarRTL)
+                  }
+                >
+                  <MdOutlineSwitchLeft className="text-2xl text-[#fff]" />
+                </IconButton>
               ) : (
-                <MdOutlineSwitchRight
-                  onClick={() => sidebarC?.setSidebarRTL(!sidebarC?.sidebarRTL)}
-                />
+                <IconButton
+                  onClick={() =>
+                    sidebarContext?.setSidebarRTL(!sidebarContext?.sidebarRTL)
+                  }
+                >
+                  <MdOutlineSwitchRight className="text-2xl text-[#fff]" />
+                </IconButton>
               )
             }
-            className={`mt-[10px] mb-[20px] color-[${colors.grey[100]}]`}
+            style={{ cursor: "default" }}
+            className={`mt-3 mb-5`}
           >
             {!collapsed && (
               <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  AAABBB
-                </Typography>
+                <div className=" flex-1 text-center">
+                  <Typography variant="h3" className="cursor-pointer">
+                    IKN ID
+                  </Typography>
+                </div>
                 <IconButton
                   onClick={
                     broken ? () => toggleSidebar() : () => collapseSidebar()
                   }
                 >
-                  <IoClose />
+                  <IoClose className="text-2xl text-[#fff]" />
                 </IconButton>
               </Box>
             )}
           </MenuItem>
-          <Box paddingLeft={collapsed ? undefined : "10%"}>
-            {menus.map((nav, idx) => {
+          <Box
+            paddingLeft={collapsed ? undefined : "10%"}
+            paddingRight={collapsed ? undefined : "10%"}
+          >
+            {menuList.map((nav, idx) => {
               return nav.type === "dropdown" ? (
-                <SubMenu key={idx} label={nav.title} icon={nav.icon}>
+                <SubMenu
+                  key={idx}
+                  label={<Typography variant="h6">{nav.title}</Typography>}
+                  icon={nav.icon}
+                  className={`${
+                    location.pathname.includes(nav.name) ? "bg-[#0f74c6]" : ""
+                  } ${
+                    !collapsed ? "rounded-sm" : ""
+                  } transition-all duration-100`}
+                >
                   {nav.children?.map((nav, idx) => (
                     <MenuItem
                       key={idx}
                       routerLink={<Link to={nav.route || ""} />}
-                      active={location.pathname === nav.route ? true : false}
-                      icon={nav.icon}
+                      className={`${
+                        location.pathname === nav.route ? "bg-[#fff]" : ""
+                      } group hover:bg-[#0f74c6] ${
+                        !collapsed ? "rounded-sm" : ""
+                      } ${!collapsed ? "mt-2" : ""}`}
                     >
-                      <Typography>{nav.title}</Typography>
+                      <Typography
+                        className={`${
+                          location.pathname === nav.route
+                            ? `text-[#045ea8]`
+                            : ""
+                        } group-hover:text-[#fff] rounded-sm`}
+                        variant="h6"
+                      >
+                        {nav.title}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </SubMenu>
@@ -181,10 +140,29 @@ const MyProSidebar = () => {
                 <MenuItem
                   key={idx}
                   routerLink={<Link to={nav.route || ""} />}
-                  active={location.pathname === nav.route ? true : false}
-                  icon={nav.icon}
+                  icon={
+                    <span
+                      className={`${
+                        location.pathname === nav.route ? ` text-[#045ea8]` : ""
+                      } group-hover:text-[#fff]`}
+                    >
+                      {nav.icon}
+                    </span>
+                  }
+                  className={`${
+                    location.pathname === nav.route ? `bg-[#fff]` : ""
+                  } group hover:bg-[#0f74c6] ${
+                    !collapsed ? "rounded-sm" : ""
+                  } transition-all duration-300 mb-2`}
                 >
-                  <Typography>{nav.title}</Typography>
+                  <Typography
+                    className={`${
+                      location.pathname === nav.route ? `text-[#045ea8]` : ""
+                    } group-hover:text-[#fff]`}
+                    variant="h6"
+                  >
+                    {nav.title}
+                  </Typography>
                 </MenuItem>
               );
             })}

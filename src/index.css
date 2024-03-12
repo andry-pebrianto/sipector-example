@@ -6,11 +6,11 @@
   font-family: "Lato", sans-serif;
 }
 
-.sidebar-inner::-webkit-scrollbar {
+.scrollbar-hidden, .sidebar-inner::-webkit-scrollbar {
   display: none;
 }
 
-.sidebar-inner {
+.scrollbar-hidden, .sidebar-inner {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
