@@ -28,11 +28,9 @@ export const MyProSidebarProvider = ({ children }: { children: ReactNode }) => {
         }}
       >
         <div
-          style={{
-            display: "flex",
-            flexDirection: sidebarRTL ? "row-reverse" : "row",
-          }}
-          className="clean"
+          className={`clean flex ${
+            sidebarRTL ? "flex-row-reverse" : "flex-row"
+          }`}
         >
           <MyProSidebar />
           {children}

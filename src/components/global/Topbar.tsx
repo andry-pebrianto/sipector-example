@@ -1,67 +1,43 @@
 import { useContext } from "react";
 import { useProSidebar } from "react-pro-sidebar";
-import { useTheme, Box, IconButton, InputBase } from "@mui/material";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import { ColorModeContext, tokens } from "../../hooks/useTheme";
+import { useTheme, Box, IconButton, Typography } from "@mui/material";
+import { IoMenuSharp, IoNotifications } from "react-icons/io5";
+import { MdLightMode, MdDarkMode } from "react-icons/md";
+import { ColorModeContext } from "../../hooks/useTheme";
 
 const Topbar = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const { toggleSidebar, broken, rtl } = useProSidebar();
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
-      <Box display="flex">
+      <Box display="flex" alignItems={"center"}>
         {broken && !rtl && (
           <IconButton
             sx={{ margin: "0 6 0 2" }}
             onClick={() => toggleSidebar()}
           >
-            <MenuOutlinedIcon />
+            <IoMenuSharp />
           </IconButton>
         )}
-        <Box
-          display="flex"
-          bgcolor={colors.primary[400]}
-          p={0.2}
-          borderRadius={1}
-        >
-          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search" />
-          <IconButton type="button">
-            <SearchIcon />
-          </IconButton>
-        </Box>
+        <Typography variant="h5" fontStyle={"italic"}>
+          PT Solusi Integrasi Pratama
+        </Typography>
       </Box>
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <LightModeOutlinedIcon />
-          ) : (
-            <DarkModeOutlinedIcon />
-          )}
+          {theme.palette.mode === "dark" ? <MdLightMode /> : <MdDarkMode />}
         </IconButton>
         <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
+          <IoNotifications />
         </IconButton>
         {broken && rtl && (
           <IconButton
             sx={{ margin: "0 6 0 2" }}
             onClick={() => toggleSidebar()}
           >
-            <MenuOutlinedIcon />
+            <IoMenuSharp />
           </IconButton>
         )}
       </Box>

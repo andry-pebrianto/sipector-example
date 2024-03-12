@@ -1,65 +1,87 @@
-// docs https://github.com/azouaoui-med/react-pro-sidebar
-import { ReactNode, useState } from "react";
-import { Menu, Sidebar, MenuItem } from "react-pro-sidebar";
-import { useProSidebar } from "react-pro-sidebar";
-
+import { Link, useLocation } from "react-router-dom";
+import {
+  Menu,
+  Sidebar,
+  MenuItem,
+  SubMenu,
+  useProSidebar,
+} from "react-pro-sidebar";
+import { useTheme, Box, Typography, IconButton } from "@mui/material";
+import {
+  MdLocalPostOffice,
+  MdPieChart,
+  MdOutlineSwitchLeft,
+  MdOutlineSwitchRight,
+} from "react-icons/md";
+import { IoClose, IoMenuSharp } from "react-icons/io5";
+import { tokens } from "../../../hooks/useTheme";
 import { useSidebarContext } from "./useSidebarContext";
 
-import { Link } from "react-router-dom";
-import { useTheme, Box, Typography, IconButton } from "@mui/material";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import SwitchRightOutlinedIcon from "@mui/icons-material/SwitchRightOutlined";
-import SwitchLeftOutlinedIcon from "@mui/icons-material/SwitchLeftOutlined";
-import { tokens } from "../../../hooks/useTheme";
-
-const Item = ({
-  title,
-  to,
-  icon,
-  selected,
-  setSelected,
-}: {
+export interface IMenus {
+  name: string;
   title: string;
-  to: string;
-  icon: ReactNode;
-  selected: string;
-  setSelected: (value: string) => void;
-}) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);  
+  type: "link" | "dropdown";
+  route?: string;
+  icon?: JSX.Element;
+  children?: IMenus[];
+}
 
-  return (
-    <Link to={to} style={{ color: colors.blueAccent[400] }}>
-      <MenuItem
-        active={selected === title}
-        style={{ color: colors.grey[100] }}
-        onClick={() => setSelected(title)}
-        icon={icon}
-      >
-        <Typography>{title}</Typography>
-      </MenuItem>
-    </Link>
-  );
-};
+export const menus: IMenus[] = [
+  {
+    name: "page1",
+    title: "Page 1",
+    type: "link",
+    route: "/page1",
+    icon: <MdPieChart className="text-xl" />,
+  },
+  {
+    name: "page2&3",
+    title: "Page 2 & 3",
+    type: "dropdown",
+    icon: <MdLocalPostOffice className="text-xl" />,
+    children: [
+      {
+        name: "page2",
+        title: "Page 2",
+        type: "link",
+        route: "/page1/page2",
+      },
+      {
+        name: "page3",
+        title: "Page 3",
+        type: "link",
+        route: "/page1/page2/page3",
+      },
+    ],
+  },
+  {
+    name: "page4&5",
+    title: "Page 4 & 5",
+    type: "dropdown",
+    icon: <MdLocalPostOffice className="text-xl" />,
+    children: [
+      {
+        name: "page4",
+        title: "Page 4",
+        type: "link",
+        route: "/page1/page2/page3/page4",
+      },
+      {
+        name: "page5",
+        title: "Page 5",
+        type: "link",
+        route: "/page1/page2/page3/page4/page5",
+      },
+    ],
+  },
+];
 
 const MyProSidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [selected, setSelected] = useState("Dashboard");
   const sidebarC = useSidebarContext();
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
+  const location = useLocation();
 
   return (
     <Box
@@ -84,7 +106,11 @@ const MyProSidebar = () => {
           color: "inherit !important",
           backgroundColor: "transparent !important",
         },
-        "& .menu-item:hover": {
+        "& .sub-menu-content": {
+          color: "inherit !important",
+          backgroundColor: "transparent !important",
+        },
+        "& .menu-anchor:hover": {
           color: `${colors.blueAccent[500]} !important`,
           backgroundColor: "transparent !important",
         },
@@ -95,30 +121,26 @@ const MyProSidebar = () => {
       }}
     >
       <Sidebar
-        className="example"
         breakPoint="md"
         rtl={sidebarC?.sidebarRTL}
         backgroundColor={colors.primary[400]}
       >
-        <Menu className="example">
+        <Menu>
           <MenuItem
             icon={
               collapsed ? (
-                <MenuOutlinedIcon onClick={() => collapseSidebar()} />
+                <IoMenuSharp onClick={() => collapseSidebar()} />
               ) : sidebarC?.sidebarRTL ? (
-                <SwitchLeftOutlinedIcon
+                <MdOutlineSwitchLeft
                   onClick={() => sidebarC?.setSidebarRTL(!sidebarC?.sidebarRTL)}
                 />
               ) : (
-                <SwitchRightOutlinedIcon
+                <MdOutlineSwitchRight
                   onClick={() => sidebarC?.setSidebarRTL(!sidebarC?.sidebarRTL)}
                 />
               )
             }
-            style={{
-              margin: "10px 0 20px 0",
-              color: colors.grey[100],
-            }}
+            className={`mt-[10px] mb-[20px] color-[${colors.grey[100]}]`}
           >
             {!collapsed && (
               <Box
@@ -128,120 +150,44 @@ const MyProSidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  AAABBB
                 </Typography>
                 <IconButton
                   onClick={
                     broken ? () => toggleSidebar() : () => collapseSidebar()
                   }
                 >
-                  <CloseOutlinedIcon />
+                  <IoClose />
                 </IconButton>
               </Box>
             )}
           </MenuItem>
           <Box paddingLeft={collapsed ? undefined : "10%"}>
-            <Item
-              title="Dashboard"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 20px 5px 20px" }}
-            >
-              Data
-            </Typography>
-            <Item
-              title="Manage Team"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Contacts Information"
-              to="/contacts"
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Invoices Balances"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 20px 5px 20px" }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 20px 5px 20px" }}
-            >
-              Charts
-            </Typography>
-            <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Geography Chart"
-              to="/geography"
-              icon={<MapOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {menus.map((nav, idx) => {
+              return nav.type === "dropdown" ? (
+                <SubMenu key={idx} label={nav.title} icon={nav.icon}>
+                  {nav.children?.map((nav, idx) => (
+                    <MenuItem
+                      key={idx}
+                      routerLink={<Link to={nav.route || ""} />}
+                      active={location.pathname === nav.route ? true : false}
+                      icon={nav.icon}
+                    >
+                      <Typography>{nav.title}</Typography>
+                    </MenuItem>
+                  ))}
+                </SubMenu>
+              ) : (
+                <MenuItem
+                  key={idx}
+                  routerLink={<Link to={nav.route || ""} />}
+                  active={location.pathname === nav.route ? true : false}
+                  icon={nav.icon}
+                >
+                  <Typography>{nav.title}</Typography>
+                </MenuItem>
+              );
+            })}
           </Box>
         </Menu>
       </Sidebar>
