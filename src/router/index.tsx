@@ -4,7 +4,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import routeList, { IRoute } from "./routeList";
+import { IRoute, privateRouteList } from "./routeList";
+import MainLayout from "../layouts/MainLayout";
 
 const mapRoutes = (
   route: IRoute,
@@ -36,7 +37,13 @@ const mapRoutes = (
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <>{routeList?.map((route, idx) => mapRoutes(route, idx, route.element))}</>
+    <>
+      <Route path="/" element={<MainLayout />}>
+        {privateRouteList?.map((route, idx) =>
+          mapRoutes(route, idx, route.element)
+        )}
+      </Route>
+    </>
   )
 );
 

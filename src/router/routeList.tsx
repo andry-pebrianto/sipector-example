@@ -7,7 +7,7 @@ export interface IRoute {
   children?: IRoute[];
 }
 
-const routeList: IRoute[] = [
+export const privateRouteList: IRoute[] = [
   {
     path: "/page1",
     name: "Page1Page",
@@ -43,4 +43,4 @@ const routeList: IRoute[] = [
   },
 ];
 
-export default routeList;
+export const authRouteList: IRoute[] = [];
